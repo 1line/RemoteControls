@@ -95,10 +95,10 @@ document.addEventListener("remote-event", function(event) {
     case "playpause":
       // doSomething();
       break;
-    case "skip":
+    case "nextTrack":
       // doSomething();
       break;
-    case "back":
+    case "prevTrack":
       // doSomething();
       break;
   }
