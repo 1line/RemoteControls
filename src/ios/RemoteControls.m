@@ -12,6 +12,7 @@
 @implementation RemoteControls
 
 static RemoteControls *remoteControls = nil;
+NSMutableDictionary *nowPlaying = nil;
 
 - (void)pluginInitialize
 {
@@ -68,14 +69,18 @@ static RemoteControls *remoteControls = nil;
                 if (NSClassFromString(@"MPNowPlayingInfoCenter")) {
                     MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage: image];
                     MPNowPlayingInfoCenter *center = [MPNowPlayingInfoCenter defaultCenter];
-                    center.nowPlayingInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-                        artist, MPMediaItemPropertyArtist,
-                        title, MPMediaItemPropertyTitle,
-                        album, MPMediaItemPropertyAlbumTitle,
-                        artwork, MPMediaItemPropertyArtwork,
-                        duration, MPMediaItemPropertyPlaybackDuration,
-                        elapsed, MPNowPlayingInfoPropertyElapsedPlaybackTime,
-                        [NSNumber numberWithInt:1], MPNowPlayingInfoPropertyPlaybackRate, nil];
+                    
+                    nowPlaying = [NSMutableDictionary dictionaryWithDictionary:@{
+                        MPMediaItemPropertyArtist: artist,
+                        MPMediaItemPropertyTitle: title,
+                        MPMediaItemPropertyAlbumTitle: album,
+                        MPMediaItemPropertyArtwork: artwork,
+                        MPMediaItemPropertyPlaybackDuration: duration,
+                        MPNowPlayingInfoPropertyElapsedPlaybackTime: elapsed,
+                        MPNowPlayingInfoPropertyPlaybackRate: [NSNumber numberWithInt:1]
+                    }];
+
+                    center.nowPlayingInfo = nowPlaying;
                 }
             });
         }
@@ -83,8 +88,8 @@ static RemoteControls *remoteControls = nil;
 }
 
 
-- (void)receiveRemoteEvent:(UIEvent *)receivedEvent {
-
+- (void)receiveRemoteEvent:(UIEvent *)receivedEvent 
+{
     if (receivedEvent.type == UIEventTypeRemoteControl) {
 
         NSString *subtype = @"other";
@@ -98,11 +103,23 @@ static RemoteControls *remoteControls = nil;
 
             case UIEventSubtypeRemoteControlPlay:
                 NSLog(@"play clicked.");
+
+                if (NSClassFromString(@"MPNowPlayingInfoCenter")) {
+                    [nowPlaying setObject:[NSNumber numberWithInt:1] forKey:MPNowPlayingInfoPropertyPlaybackRate];
+                    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nowPlaying;
+                }
+
                 subtype = @"play";
                 break;
 
             case UIEventSubtypeRemoteControlPause:
                 NSLog(@"nowplaying pause clicked.");
+
+                if (NSClassFromString(@"MPNowPlayingInfoCenter")) {
+                    [nowPlaying setObject:[NSNumber numberWithInt:0] forKey:MPNowPlayingInfoPropertyPlaybackRate];
+                    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nowPlaying;
+                }
+
                 subtype = @"pause";
                 break;
 
