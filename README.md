@@ -33,10 +33,11 @@ Add the plugin much like any other:
     [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
 }
 
-//add this function
-- (void)remoteControlReceivedWithEvent:(UIEvent *)receivedEvent {
-       [[RemoteControls remoteControls] receiveRemoteEvent:receivedEvent];
-   }
+// add this function
+- (void)remoteControlReceivedWithEvent:(UIEvent *)receivedEvent 
+{
+    [[RemoteControls remoteControls] receiveRemoteEvent:receivedEvent];
+}
 ```
 
 Then add this below `#import "MainViewController.h"` in `MainViewController.m`
@@ -77,11 +78,31 @@ function onDeviceReady() {
   }, params);
 }
 
-//listen for the event
+// listen for the event
 document.addEventListener("remote-event", function(event) {
-//do something
+  // do something
 })
 
+// handle the event's return
+document.addEventListener("remote-event", function(event) {
+  switch(event.remoteEvent.subtype){
+    case "play":
+      // doSomething();
+      break;
+    case "pause":
+      // doSomething();
+      break;
+    case "playpause":
+      // doSomething();
+      break;
+    case "skip":
+      // doSomething();
+      break;
+    case "back":
+      // doSomething();
+      break;
+  }
+});
 ```
 
 ## RemoteControls License
