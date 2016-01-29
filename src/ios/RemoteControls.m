@@ -118,23 +118,11 @@ NSMutableDictionary *nowPlaying = nil;
 
             case UIEventSubtypeRemoteControlPlay:
                 NSLog(@"play clicked.");
-
-                if (NSClassFromString(@"MPNowPlayingInfoCenter")) {
-                    [nowPlaying setObject:[NSNumber numberWithInt:1] forKey:MPNowPlayingInfoPropertyPlaybackRate];
-                    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nowPlaying;
-                }
-
                 subtype = @"play";
                 break;
 
             case UIEventSubtypeRemoteControlPause:
                 NSLog(@"nowplaying pause clicked.");
-
-                if (NSClassFromString(@"MPNowPlayingInfoCenter")) {
-                    [nowPlaying setObject:[NSNumber numberWithInt:0] forKey:MPNowPlayingInfoPropertyPlaybackRate];
-                    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nowPlaying;
-                }
-
                 subtype = @"pause";
                 break;
 
