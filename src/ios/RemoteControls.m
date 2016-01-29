@@ -80,6 +80,21 @@ NSMutableDictionary *nowPlaying = nil;
                         MPNowPlayingInfoPropertyPlaybackRate: [NSNumber numberWithInt:1]
                     }];
 
+                    NSString *streamingTitle = @"No Ar";
+
+                    if ([streamingTitle isEqualToString:title]) {
+                        NSLog(@"Tocando o streming");
+
+                        // Removendo o Next/Prev do Streaming - Apenas no iOS 7
+                        [MPRemoteCommandCenter sharedCommandCenter].previousTrackCommand.enabled = NO;
+                        [MPRemoteCommandCenter sharedCommandCenter].nextTrackCommand.enabled = NO;
+
+                    } else {
+                        
+                        // Adicionando o contador de tempo apenas nas músicas
+                        [nowPlaying setObject:duration forKey:MPMediaItemPropertyPlaybackDuration];
+                    }
+
                     center.nowPlayingInfo = nowPlaying;
                 }
             });
